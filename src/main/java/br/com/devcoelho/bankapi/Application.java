@@ -1,4 +1,4 @@
-package me.dio;
+package br.com.devcoelho.bankapi;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.servers.Server;
