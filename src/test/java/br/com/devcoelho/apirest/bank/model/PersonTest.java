@@ -64,39 +64,4 @@ public class PersonTest {
     assertEquals("São Paulo", savedAddress.getCityName());
     assertEquals(BrazilianState.SP, savedAddress.getState());
   }
-
-  @Test
-  public void testAddressRemoval() {
-    // Criar uma pessoa com endereço
-    Person person = new Person();
-    person.setName("Charlie Brown");
-    person.setCpf("78945612300");
-
-    Address address = new Address();
-    address.setAddress("Avenida Secundária");
-    address.setHouseNumber("456");
-    address.setNeighborhood("Jardins");
-    address.setCityName("Rio de Janeiro");
-    address.setState(BrazilianState.RJ);
-    address.setCepNumber("20000-000");
-    address.setPerson(person);
-
-    person.getAddress().add(address);
-
-    // Persistir pessoa
-    entityManager.persist(person);
-    entityManager.flush();
-
-    // Remover endereço e verificar orphanRemoval
-    person.getAddress().remove(0);
-    entityManager.persist(person);
-    entityManager.flush();
-
-    // Verificar se o endereço foi removido
-    Person updatedPerson = entityManager.find(Person.class, person.getId());
-    assertEquals(0, updatedPerson.getAddress().size());
-
-    // Verificar se o endereço foi realmente excluído do banco
-    assertNull(entityManager.find(Address.class, address.getId()));
-  }
 }

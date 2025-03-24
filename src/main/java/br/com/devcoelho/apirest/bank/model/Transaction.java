@@ -1,7 +1,7 @@
 package br.com.devcoelho.apirest.bank.model;
 
 import br.com.devcoelho.apirest.bank.enums.TransactionType;
-import br.com.devcoelho.apirest.bank.model.interfaces.AccountInterface;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,9 +38,9 @@ public class Transaction {
 
   @ManyToOne
   @JoinColumn(name = "source_account_id")
-  private AccountInterface sourceAccount;
+  private Account sourceAccount;
 
   @ManyToOne
   @JoinColumn(name = "destination_account_id")
-  private AccountInterface destinationAccount;
+  private Account destinationAccount;
 }

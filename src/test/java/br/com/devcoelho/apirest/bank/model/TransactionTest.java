@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import br.com.devcoelho.apirest.bank.enums.TransactionType;
-import br.com.devcoelho.apirest.bank.model.interfaces.AccountInterface;
+import br.com.devcoelho.apirest.bank.model.interfaces.Account;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,11 +19,9 @@ public class TransactionTest {
 
   private Transaction transaction;
 
-  @Mock
-  private AccountInterface sourceAccountMock;
+  @Mock private Account sourceAccountMock;
 
-  @Mock
-  private AccountInterface destinationAccountMock;
+  @Mock private Account destinationAccountMock;
 
   private final long transactionId = 1L;
   private final BigDecimal amount = new BigDecimal("500.00");
@@ -31,13 +29,14 @@ public class TransactionTest {
 
   @BeforeEach
   public void setup() {
-    transaction = new Transaction(
-        transactionId,
-        TransactionType.TRANSFER,
-        amount,
-        transactionDate,
-        sourceAccountMock,
-        destinationAccountMock);
+    transaction =
+        new Transaction(
+            1L,
+            TransactionType.TRANSFER,
+            new BigDecimal("100.00"),
+            new Date(),
+            sourceAccountMock,
+            destinationAccountMock);
   }
 
   @Test
@@ -92,7 +91,7 @@ public class TransactionTest {
   @DisplayName("Should update source account")
   public void shouldUpdateSourceAccount() {
     // Given
-    AccountInterface newSourceAccount = mock(AccountInterface.class);
+    Account newSourceAccount = mock(Account.class);
 
     // When
     transaction.setSourceAccount(newSourceAccount);
@@ -105,7 +104,7 @@ public class TransactionTest {
   @DisplayName("Should update destination account")
   public void shouldUpdateDestinationAccount() {
     // Given
-    AccountInterface newDestinationAccount = mock(AccountInterface.class);
+    Account newDestinationAccount = mock(Account.class);
 
     // When
     transaction.setDestinationAccount(newDestinationAccount);
@@ -129,24 +128,27 @@ public class TransactionTest {
   @Test
   @DisplayName("Transaction with different types should behave correctly")
   public void transactionWithDifferentTypesShouldBehaveCorrectly() {
+    Account nullAcc;
     // Given
-    Transaction depositTransaction = new Transaction(
-        2L,
-        TransactionType.DEPOSIT,
-        amount,
-        transactionDate,
-        sourceAccountMock,
-        null // No destination account for deposit
-    );
+    Transaction depositTransaction =
+        new Transaction(
+            2L,
+            TransactionType.DEPOSIT,
+            amount,
+            transactionDate,
+            sourceAccountMock,
+            nullAcc // No destination account for deposit
+            );
 
-    Transaction withdrawalTransaction = new Transaction(
-        3L,
-        TransactionType.WITHDRAWAL,
-        amount,
-        transactionDate,
-        sourceAccountMock,
-        null // No destination account for withdrawal
-    );
+    Transaction withdrawalTransaction =
+        new Transaction(
+            3L,
+            TransactionType.WITHDRAWAL,
+            amount,
+            transactionDate,
+            sourceAccountMock,
+            nullAcc // No destination account for withdrawal
+            );
 
     // Then
     assertEquals(TransactionType.DEPOSIT, depositTransaction.getType());

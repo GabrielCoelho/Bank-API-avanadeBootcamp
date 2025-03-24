@@ -2,7 +2,7 @@ package br.com.devcoelho.apirest.bank.model.interfaces;
 
 import java.math.BigDecimal;
 
-public interface AccountInterface {
+public interface Account {
 
   boolean isValid();
 
@@ -10,7 +10,7 @@ public interface AccountInterface {
 
   void deposit(BigDecimal value);
 
-  void transfer(BigDecimal value, AccountInterface accountOfDestiny);
+  void transfer(BigDecimal value, Account accountOfDestiny);
 
   void printExtract();
 

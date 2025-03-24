@@ -53,7 +53,7 @@ public class Account implements AccountInterface {
   @JoinColumn(name = "client_id")
   private Person client;
 
-  @OneToMany(mappedBy = "transactions", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "sourceAccount", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Transaction> transactionHistory;
 
   private LocalDateTime openingDate;
@@ -108,16 +108,18 @@ public class Account implements AccountInterface {
       throw new InvalidOperationException("Transfer ammount must be positive");
     }
 
-    if (value.compareTo(getBalance()) <= 0) {
+    if (value.compareTo(getBalance()) > 0) {
       throw new InsufficientBalanceException("Insufficient balance to transfer");
     }
 
     this.withdraw(value);
     accountOfDestiny.deposit(value);
 
-    Transaction lastTransaction = this.transactionHistory.get(this.transactionHistory.size() - 1);
-    lastTransaction.setType(TransactionType.TRANSFER);
-    lastTransaction.setDestinationAccount(accountOfDestiny);
+    if (!this.transactionHistory.isEmpty()) {
+      Transaction lastTransaction = this.transactionHistory.get(this.transactionHistory.size() - 1);
+      lastTransaction.setType(TransactionType.TRANSFER);
+      lastTransaction.setDestinationAccount(accountOfDestiny);
+    }
   }
 
   @Override
