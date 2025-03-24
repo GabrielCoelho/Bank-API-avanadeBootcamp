@@ -7,8 +7,6 @@ module br.com.devcoelho {
   requires spring.boot;
   requires spring.boot.autoconfigure;
 
-  // And any other modules you need
-
   // Export your application package to Spring
   exports br.com.devcoelho.apirest.bank to
       spring.beans,
