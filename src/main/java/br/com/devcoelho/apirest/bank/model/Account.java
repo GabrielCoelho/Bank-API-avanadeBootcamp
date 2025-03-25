@@ -53,7 +53,7 @@ public class Account implements AccountInterface {
   @JoinColumn(name = "client_id")
   private Person client;
 
-  @OneToMany(mappedBy = "transactions", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "sourceAccount", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Transaction> transactionHistory;
 
   private LocalDateTime openingDate;
@@ -97,9 +97,7 @@ public class Account implements AccountInterface {
     this.toString();
   }
 
-  @SuppressWarnings("exports")
-  @Override
-  public void transfer(BigDecimal value, AccountInterface accountOfDestiny) {
+  public void transfer(BigDecimal value, Account accountOfDestiny) {
     if (!accountOfDestiny.isValid()) {
       throw new InvalidAccountException("Destination account is invalid");
     }

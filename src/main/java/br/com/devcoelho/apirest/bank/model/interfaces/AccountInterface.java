@@ -10,8 +10,6 @@ public interface AccountInterface {
 
   void deposit(BigDecimal value);
 
-  void transfer(BigDecimal value, AccountInterface accountOfDestiny);
-
   void printExtract();
 
   void printTransactions();
