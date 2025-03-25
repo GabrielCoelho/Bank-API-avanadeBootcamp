@@ -35,8 +35,6 @@ public class PersonService {
             existingPerson -> {
               existingPerson.setName(personDetails.getName());
               existingPerson.setCpf(personDetails.getCpf());
-              // Decidir como lidar com endereços (pode-se substituir a lista completa ou
-              // adicionar/remover endereços específicos)
               if (personDetails.getAddress() != null) {
                 existingPerson.getAddress().clear();
                 personDetails

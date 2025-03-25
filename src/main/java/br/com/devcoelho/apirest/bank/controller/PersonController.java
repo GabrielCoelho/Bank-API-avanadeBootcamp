@@ -2,6 +2,7 @@ package br.com.devcoelho.apirest.bank.controller;
 
 import br.com.devcoelho.apirest.bank.model.Person;
 import br.com.devcoelho.apirest.bank.service.PersonService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class PersonController {
   }
 
   @PostMapping
-  public ResponseEntity<Person> addPerson(@RequestBody Person person) {
+  public ResponseEntity<Person> addPerson(@Valid @RequestBody Person person) {
     Person savedPerson = personService.savePerson(person);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
   }
