@@ -1,8 +1,11 @@
 package br.com.devcoelho.apirest.bank.controller;
 
 import br.com.devcoelho.apirest.bank.model.Person;
-import java.util.ArrayList;
+import br.com.devcoelho.apirest.bank.service.PersonService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,38 +19,48 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/person")
 public class PersonController {
 
-  private List<Person> persons = new ArrayList<>();
+  private final PersonService personService;
+
+  @Autowired
+  public PersonController(PersonService personService) {
+    this.personService = personService;
+  }
 
   @GetMapping
-  public List<Person> getPersons() {
-    return persons;
+  public ResponseEntity<List<Person>> getPersons() {
+    List<Person> persons = personService.getAllPersons();
+    return ResponseEntity.ok(persons);
   }
 
   @GetMapping("/{id}")
-  public Person getPerson(@PathVariable Long id) {
-    return persons.stream().filter(person -> person.getId().equals(id)).findFirst().orElse(null);
+  public ResponseEntity<Person> getPerson(@PathVariable Long id) {
+    return personService
+        .getPersonById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   @PostMapping
-  public Person addPerson(@RequestBody Person person) {
-    persons.add(person);
-    return person;
+  public ResponseEntity<Person> addPerson(@RequestBody Person person) {
+    Person savedPerson = personService.savePerson(person);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
   }
 
   @PutMapping("/{id}")
-  public Person updatePerson(@PathVariable Long id, @RequestBody Person person) {
-    for (int i = 0; i < persons.size(); i++) {
-      if (persons.get(i).getId().equals(id)) {
-        persons.set(i, person);
-        return person;
-      }
-    }
-    return null;
+  public ResponseEntity<Person> updatePerson(@PathVariable Long id, @RequestBody Person person) {
+    return personService
+        .updatePerson(id, person)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   @DeleteMapping("/{id}")
-  public String deletePerson(@PathVariable Long id) {
-    persons.removeIf(person -> person.getId().equals(id));
-    return "Successfully removed";
+  public ResponseEntity<String> deletePerson(@PathVariable Long id) {
+    boolean wasDeleted = personService.deletePerson(id);
+    if (wasDeleted) {
+      return ResponseEntity.ok("Successfully removed");
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 }
